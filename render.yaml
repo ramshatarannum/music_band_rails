@@ -1,0 +1,23 @@
+databases:
+  - name: music_band_search
+    databaseName: music_band_search
+    user: music_band_search_user
+    plan: free
+
+services:
+  - type: web
+    name: music_band_search
+    runtime: ruby
+    plan: free
+    buildCommand: "./bin/render-build.sh"
+    # preDeployCommand: "bundle exec rails db:migrate" # preDeployCommand only available on paid instance types
+    startCommand: "bundle exec rails server"
+    envVars:
+      - key: postgresql://music_band_search_user:6AApoqEB5cMBRVcZ5tErLMhuuKyfLqTj@dpg-csq60ht2ng1s739aedvg-a/music_band_search
+        fromDatabase:
+          name: music_band_search
+          property: connectionString
+      - key: RAILS_MASTER_KEY
+        sync: false
+      - key: WEB_CONCURRENCY
+        value: 2 # sensible default
